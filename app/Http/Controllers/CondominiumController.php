@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\House;
 use App\Resident;
 use App\ArrendatedHouse;
+use App\Visitor;
+use App\Vigilant;
 class CondominiumController extends Controller
 {
     /**
@@ -48,6 +50,24 @@ class CondominiumController extends Controller
         
     }
 
+    public function searchVisitor(Request $request)
+    {
+        $first = $request['first'];
+        $last = $request['last'];
+        $residents = [];
+        if($first != '' && $last != ''){
+            $residents = Visitor::where('first_name','LIKE','%'.$first.'%')->orWhere('last_name','LIKE','%'.$last.'%')->get();
+        }else{
+            if($first != '' && $last == ''){
+                $residents = Visitor::where('first_name','LIKE','%'.$first.'%')->get();
+            }else{
+                $residents = Visitor::where('last_name','LIKE','%'.$last.'%')->get();
+            }
+        }
+        return $residents;
+        
+    }
+
     public function selectOwner(Request $request)
     {
         $house = House::find($request['house']);
@@ -59,6 +79,12 @@ class CondominiumController extends Controller
         $arr->id_house = $request['house'];
         $arr->save();
 
+    }
+
+    public function getCasas(Request $request){
+        $vi = Vigilant::where('usuario',$request['user'])->first();
+        $houses = DB::table('houses')->where('id_condominio',$vi->condominium_id)->get();
+        return $houses;
     }
 
     /**

@@ -47,6 +47,24 @@
                 ') !!}
             </div>
 
+            <div class="field">
+                <label for="email" class="label">Registre un email para el vigilante</label>
+                <input id="email" name="email" class="input" type="text" placeholder="Aquí el email"
+                        value="{{ old('email') }}">
+                {!! $errors->first('email', '
+                    <small class="has-text-danger">:message</small>
+                ') !!}
+            </div>
+
+            <div class="field">
+                <label for="password" class="label">Asigne un password</label>
+                <input id="password" name="password" class="input" type="password" placeholder="Password"
+                        value="{{ old('password') }}">
+                {!! $errors->first('password', '
+                    <small class="has-text-danger">:message</small>
+                ') !!}
+            </div>
+
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link" type="submit">Crear</button>

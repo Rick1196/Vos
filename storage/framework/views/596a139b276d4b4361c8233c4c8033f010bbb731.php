@@ -39,11 +39,6 @@
                                     Auditar Visitas
                                 </a>
                         </li>
-                        <li>
-                                <a class="nav-link" href="<?php echo e(route('audit.house')); ?>">
-                                    Auditar Arrendamientos
-                                </a>
-                        </li>
                         <?php endif; ?>
                         <?php if(Auth::user()->hasRole('user')): ?>
                         <li>

@@ -42,11 +42,6 @@
                                     Auditar Visitas
                                 </a>
                         </li>
-                        <li>
-                                <a class="nav-link" href="{{ route('audit.house') }}">
-                                    Auditar Arrendamientos
-                                </a>
-                        </li>
                         @endif
                         @if(Auth::user()->hasRole('user'))
                         <li>

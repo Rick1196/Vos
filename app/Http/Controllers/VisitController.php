@@ -8,6 +8,9 @@ use App\Visit;
 use App\House;
 use App\Vigilant;
 use App\Visitor;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 class VisitController extends Controller
 {
     /**
@@ -17,8 +20,10 @@ class VisitController extends Controller
      */
     public function index()
     {
-        $visits = Visit::orderBy('fecha_visita', 'ASC')->paginate(10);
-        return view('visits.index',compact('visits'));
+        $user = Auth::user()->id;
+        $vi = Vigilant::where('usuario',$user)->first();
+        $visits = DB::select("select FECHA_VISITA fecha, (R.FIRST_NAME||' ' ||R.LAST_NAME) residente, (V.FIRST_NAME||' '||V.LAST_NAME) visitante, TOV.DESCRIPTION tipo from VISITS inner join VISITORS V on VISITS.ID_VISITANTE = V.ID inner join HOUSES on VISITS.ID_CASA = HOUSES.ID inner join RESIDENTS R on HOUSES.ID_RESIDENTE = R.ID inner join TYPE_OF_VISITORS TOV on V.TYPE_VISITOR_ID = TOV.ID where VISITS.ID_VIGILANTE = ?  order by FECHA_VISITA DESC ",[$vi->id]);
+        return View('visits/index',compact('visits'));
     }
 
     /**
@@ -42,7 +47,14 @@ class VisitController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $vig = Vigilant::where('usuario',$request['user'])->first();
+        $vi = new Visit;
+        $vi->id_vigilante = $vig->id;
+        $vi->id_visitante = $request['visitor'];
+        $vi->id_casa = $request['casa'];
+        $vi->fecha_visita = Carbon::now();
+        $vi->save();
     }
 
     /**
@@ -53,7 +65,7 @@ class VisitController extends Controller
      */
     public function show($id)
     {
-        //
+       
     }
 
     /**

@@ -1,4 +1,4 @@
 @extends('visits')
 @section('visits')
-    <visits-component></visits-component>
+<visits-component user="{{Auth::user()->id}}"></visits-component>
 @endsection

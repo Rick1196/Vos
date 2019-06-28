@@ -8,13 +8,22 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    @if (session('status'))
+                    @if (Auth::user()->hasRole('user'))
                         <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                            <p>Bienvenido vigilante</p>
+                        </div>
+                    @endif
+                    @if (Auth::user()->hasRole('auditor'))
+                        <div class="alert alert-success" role="alert">
+                            <p>Bienvenido auditor</p>
+                        </div>
+                    @endif
+                    @if (Auth::user()->hasRole('admin'))
+                        <div class="alert alert-success" role="alert">
+                            <p>Bienvenido administrador</p>
                         </div>
                     @endif
 
-                    You are logged in!
                 </div>
             </div>
         </div>

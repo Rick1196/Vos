@@ -1950,27 +1950,76 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['user'],
   data: function data() {
     return {
-      found: null
+      found: null,
+      last: '',
+      first: '',
+      casas: [],
+      casa_v: 0,
+      visitor: null
     };
   },
   methods: {
-    getFound: function getFound() {
+    getCasas: function getCasas() {
       var _this = this;
 
-      axios.post("/api/searchOwner", {
+      axios.get("/api/getCasas/".concat(this.user)).then(function (response) {
+        console.log(response.data);
+        _this.casas = response.data;
+        _this.casa_v = _this.casas[0];
+      })["catch"](function (error) {
+        console.log(error.response);
+        _this.casas = [];
+      });
+    },
+    searchVisitor: function searchVisitor() {
+      var _this2 = this;
+
+      axios.post("/api/searchVisitor", {
         first: this.first,
         last: this.last
       }).then(function (response) {
         console.log(response.data);
-        _this.found = response.data;
+        _this2.found = response.data;
       })["catch"](function (error) {
         console.log(error.response);
-        _this.found = null;
+        _this2.found = null;
       });
+    },
+    seleccionar: function seleccionar(visitor) {
+      this.visitor = visitor;
+    },
+    registrar: function registrar() {
+      var _this3 = this;
+
+      if (this.visitor) {
+        axios.post("/api/registerVisit", {
+          user: this.user,
+          visitor: this.visitor.id,
+          casa: this.casa_v.id
+        }).then(function (response) {
+          console.log(response.data);
+          _this3.found = response.data;
+          alert('Visita registrada');
+          window.location.href = "/visit";
+        })["catch"](function (error) {
+          console.log(error.response);
+          _this3.found = null;
+        });
+      } else {
+        alert('Debe de indicar el visitante');
+      }
     }
+  },
+  mounted: function mounted() {
+    this.getCasas();
   }
 });
 
@@ -37668,7 +37717,7 @@ var render = function() {
               staticClass: "btn btn-md btn-primary",
               on: {
                 click: function($event) {
-                  return _vm.getFound()
+                  return _vm.searchVisitor()
                 }
               }
             },
@@ -37687,47 +37736,135 @@ var render = function() {
                 )
               ])
             ])
-          : _c("div", { staticClass: "container" }, [
-              _c("div", { staticClass: "table-responsive-lg" }, [
-                _c("table", { staticClass: "table" }, [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    _vm._l(_vm.found, function(item) {
-                      return _c("tr", [
-                        _c("td", [_vm._v(_vm._s(item.first_name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(item.last_name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(item.phone))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-primary btn-sm",
-                              on: {
-                                click: function($event) {
-                                  return _vm.seleccionar(item.id)
+          : _c(
+              "div",
+              { staticClass: "container", staticStyle: { width: "80%" } },
+              [
+                _c("div", { staticClass: "table-responsive-sm" }, [
+                  _c("table", { staticClass: "table" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      _vm._l(_vm.found, function(item) {
+                        return _c("tr", [
+                          _c("td", [_vm._v(_vm._s(item.first_name))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(item.last_name))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(item.phone))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary btn-sm",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.seleccionar(item)
+                                  }
                                 }
-                              }
-                            },
-                            [_vm._v("Seleccionar")]
-                          )
+                              },
+                              [_vm._v("Seleccionar")]
+                            )
+                          ])
                         ])
-                      ])
-                    }),
-                    0
-                  )
+                      }),
+                      0
+                    )
+                  ])
                 ])
-              ])
-            ])
+              ]
+            )
       ]),
       _vm._v(" "),
-      _vm._m(2),
+      _c("div", { staticClass: "field" }, [
+        _c("br"),
+        _vm._v(" "),
+        _c("label", { staticClass: "label", attrs: { for: "type_visitor" } }, [
+          _vm._v("¿Qué casa visita?")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c("div", { staticClass: "select is-info" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.casa_v,
+                    expression: "casa_v"
+                  }
+                ],
+                attrs: { name: "type_visitor", id: "type_visitor" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.casa_v = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c(
+                  "option",
+                  { attrs: { value: "", disabled: "", selected: "" } },
+                  [_vm._v("-- Selecciona una opcion --")]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.casas, function(casa, index) {
+                  return _c("option", { domProps: { value: casa } }, [
+                    _vm._v(_vm._s(index + 1))
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ])
+      ]),
       _vm._v(" "),
-      _vm._m(3)
+      _c("div", { staticClass: "message-body" }, [
+        _c("p", [_vm._v("Se registra la visita de: ")]),
+        _vm.visitor
+          ? _c("h4", [
+              _vm._v(
+                _vm._s(_vm.visitor.first_name + " " + _vm.visitor.last_name)
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("p")
+      ]),
+      _c("br"),
+      _vm._v(" "),
+      _c("div", { staticClass: "field is-grouped" }, [
+        _c("div", { staticClass: "control" }, [
+          _c(
+            "button",
+            {
+              staticClass: "button is-link",
+              attrs: { type: "submit" },
+              on: {
+                click: function($event) {
+                  return _vm.registrar()
+                }
+              }
+            },
+            [_vm._v("Registrar")]
+          )
+        ])
+      ])
     ])
   ])
 }
@@ -37763,48 +37900,6 @@ var staticRenderFns = [
       _c("th", [_vm._v("Numero telefonico")]),
       _vm._v(" "),
       _c("th", [_vm._v("Opciones")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field" }, [
-      _c("br"),
-      _vm._v(" "),
-      _c("label", { staticClass: "label", attrs: { for: "type_visitor" } }, [
-        _vm._v("¿Qué casa visita?")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "control" }, [
-        _c("div", { staticClass: "select is-info" }, [
-          _c(
-            "select",
-            { attrs: { name: "type_visitor", id: "type_visitor" } },
-            [
-              _c(
-                "option",
-                { attrs: { value: "", disabled: "", selected: "" } },
-                [_vm._v("-- Selecciona una opcion --")]
-              )
-            ]
-          )
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field is-grouped" }, [
-      _c("div", { staticClass: "control" }, [
-        _c(
-          "button",
-          { staticClass: "button is-link", attrs: { type: "submit" } },
-          [_vm._v("Crear")]
-        )
-      ])
     ])
   }
 ]

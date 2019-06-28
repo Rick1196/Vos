@@ -6,14 +6,22 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    <?php if(session('status')): ?>
+                    <?php if(Auth::user()->hasRole('user')): ?>
                         <div class="alert alert-success" role="alert">
-                            <?php echo e(session('status')); ?>
-
+                            <p>Bienvenido vigilante</p>
+                        </div>
+                    <?php endif; ?>
+                    <?php if(Auth::user()->hasRole('auditor')): ?>
+                        <div class="alert alert-success" role="alert">
+                            <p>Bienvenido auditor</p>
+                        </div>
+                    <?php endif; ?>
+                    <?php if(Auth::user()->hasRole('admin')): ?>
+                        <div class="alert alert-success" role="alert">
+                            <p>Bienvenido administrador</p>
                         </div>
                     <?php endif; ?>
 
-                    You are logged in!
                 </div>
             </div>
         </div>

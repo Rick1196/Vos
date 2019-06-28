@@ -18,8 +18,6 @@
             <div class="notification is-danger">
                 <button class="delete"></button>
                 Por el momento no tenemos registrado ningun tipo de visitante en el sistema
-                adipiscing elit lorem ipsum dolor. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Sit amet,
-                consectetur adipiscing elit
             </div>
         <?php else: ?>
             <table class="table">

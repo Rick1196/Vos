@@ -1,0 +1,669 @@
+-- we don't know how to generate schema JRPALACIO (class Schema) :(
+create sequence MIGRATIONS_ID_SEQ
+/
+
+create sequence USERS_ID_SEQ
+/
+
+create sequence TYPE_OF_VISITORS_ID_SEQ
+/
+
+create sequence CREDENTIALS_ID_SEQ
+/
+
+create sequence CONVEYANCES_ID_SEQ
+/
+
+create sequence VISITORS_ID_SEQ
+/
+
+create sequence CONDOMINIA_ID_SEQ
+/
+
+create sequence VIGILANTS_ID_SEQ
+/
+
+create sequence TYPE_OF_RESIDENTS_ID_SEQ
+/
+
+create sequence RESIDENTS_ID_SEQ
+/
+
+create sequence CLIENTES_ID_SEQ
+/
+
+create sequence NUMERO_DE_VISITAS_ID_SEQ
+/
+
+create sequence ROLES_ID_SEQ
+/
+
+create sequence ROLE_USER_ID_SEQ
+/
+
+create sequence HOUSES_ID_SEQ
+/
+
+create sequence ARRENDATED_HOUSES_ID_SEQ
+/
+
+create sequence LESSEES_ID_SEQ
+/
+
+create sequence VISITS_ID_SEQ
+/
+
+create sequence SEQ_TIPO_VISITANTE
+	maxvalue 999999
+/
+
+create sequence SEQ_VISITANTE
+	maxvalue 999999
+/
+
+create sequence SEQ_ID_CREDENTIALS
+	maxvalue 999999
+/
+
+create sequence SEQ_ID_CONVEYANCE
+	maxvalue 999999
+/
+
+create table MIGRATIONS
+(
+	ID NUMBER(10) not null
+		constraint MIGRATIONS_ID_PK
+			primary key,
+	MIGRATION VARCHAR2(255) not null,
+	BATCH NUMBER(10) not null
+)
+/
+
+create trigger MIGRATIONS_ID_TRG
+	before insert
+	on MIGRATIONS
+	for each row
+begin
+            if :new.ID is null then
+                select migrations_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table USERS
+(
+	ID NUMBER(19) not null
+		constraint USERS_ID_PK
+			primary key,
+	NAME VARCHAR2(255) not null,
+	EMAIL VARCHAR2(255) not null
+		constraint USERS_EMAIL_UK
+			unique,
+	EMAIL_VERIFIED_AT TIMESTAMP(6),
+	PASSWORD VARCHAR2(255) not null,
+	REMEMBER_TOKEN VARCHAR2(100),
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger USERS_ID_TRG
+	before insert
+	on USERS
+	for each row
+begin
+            if :new.ID is null then
+                select users_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table PASSWORD_RESETS
+(
+	EMAIL VARCHAR2(255) not null,
+	TOKEN VARCHAR2(255) not null,
+	CREATED_AT TIMESTAMP(6)
+)
+/
+
+create index PASSWORD_RESETS_EMAIL_INDEX
+	on PASSWORD_RESETS (EMAIL)
+/
+
+create table TYPE_OF_VISITORS
+(
+	ID NUMBER(19) not null
+		constraint TYPE_OF_VISITORS_ID_PK
+			primary key,
+	TYPE VARCHAR2(255) not null,
+	DESCRIPTION CLOB not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger TYPE_OF_VISITORS_ID_TRG
+	before insert
+	on TYPE_OF_VISITORS
+	for each row
+begin
+            if :new.ID is null then
+                select type_of_visitors_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table CREDENTIALS
+(
+	ID NUMBER(19) not null
+		constraint CREDENTIALS_ID_PK
+			primary key,
+	TYPE VARCHAR2(255) not null,
+	DESCRIPTION VARCHAR2(255) not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger CREDENTIALS_ID_TRG
+	before insert
+	on CREDENTIALS
+	for each row
+begin
+            if :new.ID is null then
+                select credentials_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table CONVEYANCES
+(
+	ID NUMBER(19) not null
+		constraint CONVEYANCES_ID_PK
+			primary key,
+	TYPE VARCHAR2(255) not null,
+	DESCRIPTION VARCHAR2(255) not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger CONVEYANCES_ID_TRG
+	before insert
+	on CONVEYANCES
+	for each row
+begin
+            if :new.ID is null then
+                select conveyances_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table VISITORS
+(
+	ID NUMBER(19) not null
+		constraint VISITORS_ID_PK
+			primary key,
+	FIRST_NAME VARCHAR2(255) not null,
+	LAST_NAME VARCHAR2(255) not null,
+	PHONE VARCHAR2(255) not null,
+	TYPE_VISITOR_ID NUMBER(19) not null
+		constraint VISITORS_TYPE_VISITOR_ID_FK
+			references TYPE_OF_VISITORS
+				on delete cascade,
+	CREDENTIAL_ID NUMBER(19) not null
+		constraint VISITORS_CREDENTIAL_ID_FK
+			references CREDENTIALS
+				on delete cascade,
+	TYPE_CONVEYANCE_ID NUMBER(19) not null
+		constraint VISITORS_TYPE_CONVEYANCE_ID_FK
+			references CONVEYANCES
+				on delete cascade,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger VISITORS_ID_TRG
+	before insert
+	on VISITORS
+	for each row
+begin
+            if :new.ID is null then
+                select visitors_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table CONDOMINIA
+(
+	ID NUMBER(19) not null
+		constraint CONDOMINIA_ID_PK
+			primary key,
+	NAME VARCHAR2(255) not null,
+	NUM_RENTED_HOUSES NUMBER(10) not null,
+	PHONE VARCHAR2(255) not null,
+	ADDRESS CLOB not null,
+	POSTAL VARCHAR2(255) not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger CONDOMINIA_ID_TRG
+	before insert
+	on CONDOMINIA
+	for each row
+begin
+            if :new.ID is null then
+                select condominia_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table VIGILANTS
+(
+	ID NUMBER(19) not null
+		constraint VIGILANTS_ID_PK
+			primary key,
+	FIRST_NAME VARCHAR2(255) not null,
+	LAST_NAME VARCHAR2(255) not null,
+	PHONE VARCHAR2(255) not null,
+	CONDOMINIUM_ID NUMBER(19) not null
+		constraint VIGILANTS_CONDOMINIUM_ID_FK
+			references CONDOMINIA
+				on delete cascade,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6),
+	USUARIO NUMBER
+		constraint VIGILANTS_USERS_ID_FK
+			references USERS
+				on delete cascade
+)
+/
+
+create trigger VIGILANTS_ID_TRG
+	before insert
+	on VIGILANTS
+	for each row
+begin
+            if :new.ID is null then
+                select vigilants_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table TYPE_OF_RESIDENTS
+(
+	ID NUMBER(19) not null
+		constraint TYPE_OF_RESIDENTS_ID_PK
+			primary key,
+	TYPE VARCHAR2(255) not null,
+	DESCRIPTION VARCHAR2(255) not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger TYPE_OF_RESIDENTS_ID_TRG
+	before insert
+	on TYPE_OF_RESIDENTS
+	for each row
+begin
+            if :new.ID is null then
+                select type_of_residents_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table RESIDENTS
+(
+	ID NUMBER(19) not null
+		constraint RESIDENTS_ID_PK
+			primary key,
+	FIRST_NAME VARCHAR2(255) not null,
+	LAST_NAME VARCHAR2(255) not null,
+	PHONE VARCHAR2(255) not null,
+	EMAIL VARCHAR2(255) not null,
+	TYPE_OF_RESIDENT_ID NUMBER(19) not null
+		constraint RESIDENT_TYP_OF_RESIDEN_ID_FK
+			references TYPE_OF_RESIDENTS
+				on delete cascade,
+	RELATIVES_ID NUMBER(19)
+		constraint RESIDENTS_RELATIVES_ID_FK
+			references RESIDENTS
+				on delete cascade,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger RESIDENTS_ID_TRG
+	before insert
+	on RESIDENTS
+	for each row
+begin
+            if :new.ID is null then
+                select residents_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table CLIENTES
+(
+	ID NUMBER(19) not null
+		constraint CLIENTES_ID_PK
+			primary key,
+	NOMBRE VARCHAR2(32) not null,
+	APELLIDO VARCHAR2(32) not null,
+	CORREO VARCHAR2(64) not null
+)
+/
+
+create trigger CLIENTES_ID_TRG
+	before insert
+	on CLIENTES
+	for each row
+begin
+            if :new.ID is null then
+                select clientes_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table AUDIT_TRANSPORTES
+(
+	ID NUMBER(10) not null,
+	DESCRIPCION VARCHAR2(255) not null,
+	FECHA DATE not null
+)
+/
+
+create table AUDIT_CREDENTIALS
+(
+	ID NUMBER(10) not null,
+	DESCRIPCION VARCHAR2(255) not null,
+	FECHA DATE not null
+)
+/
+
+create table AUDIT_TIPO_VISITANTES
+(
+	ID NUMBER(10) not null,
+	DESCRIPCION VARCHAR2(255) not null,
+	FECHA DATE not null
+)
+/
+
+create table AUDIT_VISITANTES
+(
+	ID NUMBER(10) not null,
+	DESCRIPCION VARCHAR2(255) not null,
+	FECHA DATE not null
+)
+/
+
+create table NUMERO_DE_VISITAS
+(
+	ID NUMBER(19) not null
+		constraint NUMERO_DE_VISITAS_ID_PK
+			primary key,
+	ID_VISITANTE NUMBER(10) not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger NUMERO_DE_VISITAS_ID_TRG
+	before insert
+	on NUMERO_DE_VISITAS
+	for each row
+begin
+            if :new.ID is null then
+                select numero_de_visitas_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table ROLES
+(
+	ID NUMBER(19) not null
+		constraint ROLES_ID_PK
+			primary key,
+	NAME VARCHAR2(255) not null,
+	DESCRIPTION VARCHAR2(255) not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger ROLES_ID_TRG
+	before insert
+	on ROLES
+	for each row
+begin
+            if :new.ID is null then
+                select roles_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table ROLE_USER
+(
+	ID NUMBER(19) not null
+		constraint ROLE_USER_ID_PK
+			primary key,
+	ROLE_ID NUMBER(10) not null,
+	USER_ID NUMBER(10) not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger ROLE_USER_ID_TRG
+	before insert
+	on ROLE_USER
+	for each row
+begin
+            if :new.ID is null then
+                select role_user_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table HOUSES
+(
+	ID NUMBER(19) not null
+		constraint HOUSES_ID_PK
+			primary key,
+	ESTADO NUMBER(19) not null,
+	HABITANTES NUMBER(19) not null,
+	ID_CONDOMINIO NUMBER(19) not null
+		constraint HOUSES_ID_CONDOMINIO_FK
+			references CONDOMINIA
+				on delete cascade,
+	ID_RESIDENTE NUMBER(19)
+		constraint HOUSES_ID_RESIDENTE_FK
+			references RESIDENTS
+				on delete cascade,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger HOUSES_ID_TRG
+	before insert
+	on HOUSES
+	for each row
+begin
+            if :new.ID is null then
+                select houses_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table ARRENDATED_HOUSES
+(
+	ID NUMBER(19) not null
+		constraint ARRENDATED_HOUSES_ID_PK
+			primary key,
+	HABITANTES NUMBER(19) not null
+		constraint CHECK_HABS
+			check (HABITANTES <6),
+	ID_HOUSE NUMBER(19) not null
+		constraint ARRENDATED_HOUSES_ID_HOUSE_FK
+			references HOUSES
+				on delete cascade,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger ARRENDATED_HOUSES_ID_TRG
+	before insert
+	on ARRENDATED_HOUSES
+	for each row
+begin
+            if :new.ID is null then
+                select arrendated_houses_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table LESSEES
+(
+	ID NUMBER(19) not null
+		constraint LESSEES_ID_PK
+			primary key,
+	ID_HOUSE NUMBER(19) not null
+		constraint LESSEES_ID_HOUSE_FK
+			references HOUSES
+				on delete cascade,
+	ID_RESIDENTE NUMBER(19) not null
+		constraint LESSEES_ID_RESIDENTE_FK
+			references RESIDENTS
+				on delete cascade,
+	ID_ARRENDATED NUMBER(19) not null
+		constraint LESSEES_ID_ARRENDATED_FK
+			references ARRENDATED_HOUSES
+				on delete cascade,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger LESSEES_ID_TRG
+	before insert
+	on LESSEES
+	for each row
+begin
+            if :new.ID is null then
+                select lessees_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+create table VISITS
+(
+	ID NUMBER(19) not null
+		constraint VISITS_ID_PK
+			primary key,
+	ID_VISITANTE NUMBER(19) not null
+		constraint VISITS_ID_VISITANTE_FK
+			references VISITORS
+				on delete cascade,
+	ID_VIGILANTE NUMBER(19) not null
+		constraint VISITS_ID_VIGILANTE_FK
+			references VIGILANTS
+				on delete cascade,
+	ID_CASA NUMBER(19) not null
+		constraint VISITS_ID_CASA_FK
+			references HOUSES
+				on delete cascade,
+	FECHA_VISITA DATE not null,
+	CREATED_AT TIMESTAMP(6),
+	UPDATED_AT TIMESTAMP(6)
+)
+/
+
+create trigger VISITS_ID_TRG
+	before insert
+	on VISITS
+	for each row
+begin
+            if :new.ID is null then
+                select visits_id_seq.nextval into :new.ID from dual;
+            end if;
+            end;
+/
+
+
+
+create procedure "INSERT_HOUSE"
+  (condo in number, numero in number) as
+ begin
+     FOR nhouse IN 1..numero
+    LOOP
+       insert into JRPALACIO.HOUSES(estado, habitantes, id_condominio,CREATED_AT, UPDATED_AT) values(0,0,condo, sysdate, sysdate);
+    END LOOP;
+ end;
+/
+
+create procedure "UPDATE_HOUSE"
+  (res in number) as
+ begin
+
+       update HOUSES set ID_RESIDENTE = null where ID_RESIDENTE = res;
+
+ end;\
+
+
+
+drop procedure UPDATE_HOUSE;
+
+
+
+CREATE OR REPLACE TRIGGER house_before_delete
+before delete
+   ON JRPALACIO.RESIDENTS
+   FOR EACH ROW
+
+DECLARE
+
+BEGIN
+
+     UPDATE_HOUSE(:old.ID);
+
+
+END;/
+
+ALTER TABLE JRPALACIO.ARRENDATED_HOUSES
+ADD CONSTRAINT check_habs
+  CHECK (HABITANTES < 6);
+
+
+
+alter session set "_ORACLE_SCRIPT"=true;
+create role auditor;
+create role vigilante;
+create role administrador;
+
+
+grant all privileges to auditor;
+
+grant all privileges to administrador;
+grant select on JRPALACIO.USERS to vigilante;
+grant select on JRPALACIO.VISITORS to vigilante;
+grant select on JRPALACIO.CONDOMINIA to vigilante;
+grant select on JRPALACIO.VIGILANTS to vigilante;
+grant select on JRPALACIO.VISITS to vigilante;
+grant insert on JRPALACIO.VISITS to vigilante;
+
+create user usr_audit identified by secret;
+create user usr_admin identified by secret;
+create user usr_vigilant identified by secret;
+
+grant administrador to usr_admin;
+grant auditor to usr_audit;
+grant vigilante to usr_vigilant;
+

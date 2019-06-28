@@ -6,7 +6,7 @@
                 Visitantes
             </h1>
             <h2 class="subtitle">
-                ¿Quienes pueden realizar visitas al interior de la privada?
+                Visitas realizadas al interior
             </h2>
 
         </header>
@@ -17,40 +17,28 @@
                 </div>
             </article>
         @else
-
             <table class="table is-fullwidth">
                 <thead>
                 <tr>
                     <th>Tipo</th>
                     <th>Visitante</th>
-                    <th>Vigilante</th>
                     <th>Visita a:</th>
                     <th>Fecha </th>
                 </tr>
                 </thead>
-                @foreach($visits as $group)
-
                 <tbody>
-                @foreach ($group as $visitante)
+                    @foreach ($visits as $v)
+                        <tr>
+                        <td>{{$v->tipo}}</td>
+                        <td>{{$v->visitante}}</td>
+                        <td>{{$v->residente}}</td>
+                        <td>{{$v->fecha}}</td>
+                        </tr>
+                    @endforeach
                     <tr>
-                        <td>{{ $visitante->tipoDeVisitante->type }}</td>
-                        <td>{{ $visitante->first_name }}</td>
-                        <td>{{ $visitante->last_name }}</td>
-                        <td>{{ $visitante->phone }}</td>
-
-                        <td>
-                            <form method="POST"
-                                  action="{{ route('visitante.eliminar', $visitante->id) }}" >
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
-                            </form>
-                        </td>
 
                     </tr>
-                @endforeach
                 </tbody>
-                @endforeach
 
             </table>
 

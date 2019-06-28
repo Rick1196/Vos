@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'super'),
 
     /*
     |--------------------------------------------------------------------------
@@ -90,6 +90,43 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+        'vigilante' => [
+            'driver'    => env('DB_CONNECTION_VIGILANT'),
+            'host'      => env('DB_HOST_VIGILANT'),
+            'port'      => env('DB_PORT_VIGILANT'),
+            'database'  => env('DB_DATABASE_VIGILANT'),
+            'username'  => env('DB_USERNAME_VIGILANT'),
+            'password'  => env('DB_PASSWORD_VIGILANT'),
+        ],
+
+        'admin' => [
+            'driver'    => env('DB_CONNECTION_ADMIN'),
+            'host'      => env('DB_HOST_ADMIN'),
+            'port'      => env('DB_PORT_ADMIN'),
+            'database'  => env('DB_DATABASE_ADMIN'),
+            'username'  => env('DB_USERNAME_ADMIN'),
+            'password'  => env('DB_PASSWORD_ADMIN'),
+        ],
+
+        'auditor' => [
+            'driver'    => env('DB_CONNECTION_AUDIT'),
+            'host'      => env('DB_HOST_AUDIT'),
+            'port'      => env('DB_PORT_AUDIT'),
+            'database'  => env('DB_DATABASE_AUDIT'),
+            'username'  => env('DB_USERNAME_AUDIT'),
+            'password'  => env('DB_PASSWORD_AUDIT'),
+        ],
+
+
+        'super' => [
+            'driver'    => env('DB_CONNECTION'),
+            'host'      => env('DB_HOST'),
+            'port'      => env('DB_PORT'),
+            'database'  => env('DB_DATABASE'),
+            'username'  => env('DB_USERNAME'),
+            'password'  => env('DB_PASSWORD'),
+        ],
+
 
     ],
 

@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Condominium;
 use App\Vigilant;
 use Illuminate\Http\Request;
-
+use App\User;
+use App\Role;
 class VigilantController extends Controller
 {
     /**
@@ -45,17 +46,24 @@ class VigilantController extends Controller
             'last_name' => 'required|string',
             'phone' => 'required|digits_between:7,10',
             'condominium' => 'required|not_in:0',
+            'email' => 'required|unique:users',
+            'password' => 'required'
         ]);
-
+        $role_user = Role::where('name', 'user')->first();
+        $user = new User();
+        $user->name = request('first_name');
+        $user->email = request('email');
+        $user->password = bcrypt(request('password'));
+        $user->save();
+        $user->roles()->attach($role_user);  
         $vigilant = new Vigilant;
 
         $vigilant->first_name =  request('first_name');
         $vigilant->last_name = request('last_name');
         $vigilant->phone = request('phone');
         $vigilant->condominium_id = request('condominium');
-
+        $vigilant->usuario = $user->id;
         $vigilant->save();
-
         return redirect()->route('vigilantes.index')
             ->with('success','El elemento agregado exitosamente.');
     }

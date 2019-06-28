@@ -19,3 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('searchOwner/','CondominiumController@searchOwner');
 Route::post('selectOwner/','CondominiumController@selectOwner');
+Route::get('getCasas/{user}','CondominiumController@getCasas');
+Route::post('searchVisitor/','CondominiumController@searchVisitor');
+Route::post('registerVisit/','VisitController@store');
+
