@@ -22,4 +22,5 @@ Route::post('selectOwner/','CondominiumController@selectOwner');
 Route::get('getCasas/{user}','CondominiumController@getCasas');
 Route::post('searchVisitor/','CondominiumController@searchVisitor');
 Route::post('registerVisit/','VisitController@store');
+Route::post('getVisitas/','VisitController@todas');
 

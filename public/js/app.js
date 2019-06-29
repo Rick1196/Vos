@@ -2059,11 +2059,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      found: null
+      found: null,
+      f1: '',
+      f2: ''
     };
+  },
+  methods: {
+    getFound: function getFound() {
+      var _this = this;
+
+      axios.post("/api/getVisitas", {
+        f1: this.f1,
+        f2: this.f2
+      }).then(function (response) {
+        console.log(response.data);
+        _this.found = response.data;
+      })["catch"](function (error) {
+        console.log(error.response);
+        _this.found = null;
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.getFound();
   }
 });
 
@@ -37925,6 +37965,74 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("label", { attrs: { for: "" } }, [_vm._v("Buscar por fecha")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-3" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.f1,
+              expression: "f1"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "date" },
+          domProps: { value: _vm.f1 },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.f1 = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.f2,
+              expression: "f2"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "date" },
+          domProps: { value: _vm.f2 },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.f2 = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            on: {
+              click: function($event) {
+                return _vm.getFound()
+              }
+            }
+          },
+          [_vm._v("\n            Buscar\n        ")]
+        )
+      ])
+    ]),
+    _c("br"),
+    _vm._v(" "),
     _c("div", { staticClass: "container" }, [
       _c("div", { staticClass: "table-responsive-lg" }, [
         _c("table", { staticClass: "table" }, [
@@ -37940,7 +38048,23 @@ var render = function() {
                   )
                 ])
               ])
-            : _c("tbody")
+            : _c(
+                "tbody",
+                _vm._l(_vm.found, function(item, index) {
+                  return _c("tr", [
+                    _c("th", [_vm._v(_vm._s(index + 1))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.tipo))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.visitante))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.residente))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.fecha_visita))])
+                  ])
+                }),
+                0
+              )
         ])
       ])
     ])
@@ -37954,9 +38078,11 @@ var staticRenderFns = [
     return _c("thead", [
       _c("th", [_vm._v("#")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Condominio")]),
+      _c("th", [_vm._v("Tipo de visita")]),
       _vm._v(" "),
       _c("th", [_vm._v("Visitante")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Visita a:")]),
       _vm._v(" "),
       _c("th", [_vm._v("Fecha de la visiata")])
     ])

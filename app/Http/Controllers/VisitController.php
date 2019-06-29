@@ -26,6 +26,18 @@ class VisitController extends Controller
         return View('visits/index',compact('visits'));
     }
 
+    public function todas(Request $data){
+        $f1 = $data['f1'];
+        $f2 = $data['f2'];
+        $vi = [];
+        if($f1 == '' || $f2 == ''){
+            $vi =  DB::connection('auditor')->select("select * from JRPALACIO.VISITAS_VIEW");
+        }else{
+            $vi = DB::connection('auditor')->select("select * from JRPALACIO.VISITAS_VIEW where FECHA_VISITA between TO_DATE (?, 'yyyy/mm/dd') and TO_DATE (? ,'yyyy/mm/dd')",[$f1,$f2]);
+        }
+        return $vi;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
