@@ -4,8 +4,7 @@ CREATE SEQUENCE seq_id_conveyance
   INCREMENT BY 1
   NOCYCLE ;
 
--- eliminar una secuencia
-DROP SEQUENCE seq_id_conveyance;
+
 
 -- Trigger (disparador) que identifica cuando un tranporte es agregado o eliminado de la tabla (conveyances)
 CREATE OR REPLACE TRIGGER audit_transportes
@@ -29,8 +28,7 @@ CREATE SEQUENCE seq_id_credentials
   INCREMENT BY 1
   NOCYCLE   ;
 
---eliminar una secuencia
-DROP SEQUENCE seq_id_credentials;
+
 
 CREATE OR REPLACE TRIGGER audit_crendentials
     BEFORE
@@ -124,6 +122,26 @@ BEGIN
 
 END;/
 
-ALTER TABLE JRPALACIO.ARRENDATED_HOUSES
-ADD CONSTRAINT check_habs
-  CHECK (HABITANTES < 6);
+create materialized  view visitas_view build immediate refresh  force on demand as select FECHA_VISITA, (R.FIRST_NAME||' ' ||R.LAST_NAME) residente, (V.FIRST_NAME||' '||V.LAST_NAME) visitante, TOV.DESCRIPTION tipo from VISITS inner join VISITORS V on VISITS.ID_VISITANTE = V.ID inner join HOUSES on VISITS.ID_CASA = HOUSES.ID inner join RESIDENTS R on HOUSES.ID_RESIDENTE = R.ID inner join TYPE_OF_VISITORS TOV on V.TYPE_VISITOR_ID = TOV.ID ;
+
+create procedure "UPDATE_HOUSE"
+  (res in number) as
+ begin
+
+       update HOUSES set ID_RESIDENTE = null where ID_RESIDENTE = res;
+
+ end;\
+
+CREATE OR REPLACE TRIGGER house_before_delete
+before delete
+   ON JRPALACIO.RESIDENTS
+   FOR EACH ROW
+
+DECLARE
+
+BEGIN
+
+     UPDATE_HOUSE(:old.ID);
+
+
+END;/
