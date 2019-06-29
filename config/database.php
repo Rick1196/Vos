@@ -93,7 +93,7 @@ return [
         'vigilante' => [
             'driver'    => env('DB_CONNECTION_VIGILANT'),
             'host'      => env('DB_HOST_VIGILANT'),
-            'port'      => env('DB_PORT_VIGILANT'),
+            'port'      => env('DB_PORT_VIGILANT'), 
             'database'  => env('DB_DATABASE_VIGILANT'),
             'username'  => env('DB_USERNAME_VIGILANT'),
             'password'  => env('DB_PASSWORD_VIGILANT'),

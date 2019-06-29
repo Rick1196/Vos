@@ -31,9 +31,9 @@ class VisitController extends Controller
         $f2 = $data['f2'];
         $vi = [];
         if($f1 == '' || $f2 == ''){
-            $vi =  DB::connection('auditor')->select("select * from JRPALACIO.VISITAS_VIEW");
+            $vi =  DB::select("select * from JRPALACIO.VISITAS_VIEW");
         }else{
-            $vi = DB::connection('auditor')->select("select * from JRPALACIO.VISITAS_VIEW where FECHA_VISITA between TO_DATE (?, 'yyyy/mm/dd') and TO_DATE (? ,'yyyy/mm/dd')",[$f1,$f2]);
+            $vi = DB::select("select * from JRPALACIO.VISITAS_VIEW where FECHA_VISITA between TO_DATE (?, 'yyyy/mm/dd') and TO_DATE (? ,'yyyy/mm/dd')",[$f1,$f2]);
         }
         return $vi;
     }
